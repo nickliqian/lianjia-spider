@@ -110,5 +110,5 @@ if __name__ == '__main__':
     city_list = ['bj', 'cd', 'cq', 'cs', 'dg', 'dl', 'fs', 'gz', 'hz', 'hf', 'jn', 'nj', 'qd', 'sh', 'sz', 'su', 'sy',
                  'tj', 'wh', 'xm', 'yt']
     for city_name in city_list:
-        time.sleep(60)
         main(city_name)
+        time.sleep(60)
