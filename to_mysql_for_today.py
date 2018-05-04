@@ -10,7 +10,7 @@ def today_str():
 
 
 def deal_area_data(path, code):
-    with open(path, newline="") as f:
+    with open(path, newline="", encoding="utf-8") as f:
         s = csv.reader(f)
         for row in s:
             # 房价
@@ -19,7 +19,7 @@ def deal_area_data(path, code):
                 row[4] = None
             # 二手房
             row[5] = row[5].split("套")[0]
-
+            print(row)
             sql = "INSERT INTO xiaoqu(city, date, district, area, xiaoqu, price, sale) VALUE ('{}','{}','{}','{}','{}','{}','{}')" \
                 .format(cities[code], row[0], row[1], row[2], row[3], row[4], row[5])
             myqsl_cursor.execute(sql)
@@ -58,7 +58,7 @@ if __name__ == '__main__':
                       'fs', 'gz', 'hz', 'hf', 'jn', 'nj',
                       'qd', 'sh', 'sz', 'su', 'sy', 'tj',
                       'wh', 'xm', 'yt']
-
+    record_fail = []
     # 建立数据库连接
     print("Connect to MySQL...")
     mysql_conn = pymysql.connect(host='127.0.0.1', port=3306, user='root', passwd='mysql', db=target_db, charset='utf8')
@@ -72,8 +72,13 @@ if __name__ == '__main__':
             for filename in file_list:
                 file_path = os.path.join(file_dir, filename)
                 print(file_path)
-                deal_area_data(file_path, city_code)
+                try:
+                    deal_area_data(file_path, city_code)
+                except Exception:
+                    record_fail.append(file_path)
     finally:
         myqsl_cursor.close()
         mysql_conn.close()
-    print("Close MySQL connection...")
+        print("Close MySQL connection...")
+        print("Fail file as below")
+        print(record_fail)
